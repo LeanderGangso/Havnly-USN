@@ -27,7 +27,7 @@ Route::get('/accounts', [App\Http\Controllers\Api\AccountController::class, 'ind
 Route::get('/accounts/{id}', [App\Http\Controllers\Api\AccountController::class, 'show']);
 Route::get('/accounts/{id}/balances', [App\Http\Controllers\Api\AccountController::class, 'balances']);
 Route::get('/accounts/{id}/transactions', [App\Http\Controllers\Api\AccountController::class, 'transactions']);
-
+// Dette er en push test
 // catch all 404
 Route::fallback(function () {
     return response()->json([

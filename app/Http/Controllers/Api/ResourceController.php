@@ -18,12 +18,12 @@ class ResourceController extends Controller
             $session = $this->getOrFailSession($payment->session_id);
             Neonomics::completePayment($id, $session->user_id, $session->session_id);
             $userId = $session->user_id;
-            $action = 'Payment authorized.';
+            $action = 'Payment authorized';
             $payment->delete();
         } else {
             $session = $this->getOrFailSession($id);
             $userId = $session->user_id;
-            $action = 'Consent approved.';
+            $action = 'Consent approved';
         }
 
         return $this->responseJson([

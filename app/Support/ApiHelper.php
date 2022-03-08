@@ -131,7 +131,7 @@ class ApiHelper
             throw new PaymentException($res, $sessionId, $paymentId);
         }
 
-        throw new JsonException(401, 'Approval URL.', $res);
+        throw new JsonException(401, 'Approval URL', $res);
     }
 
     private function getErrorBody($e)

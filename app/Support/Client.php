@@ -199,7 +199,7 @@ class Client
             $sessionId = $e->getSessionId();
             $paymentId = $e->getPaymentId();
             $this->createPayment($sessionId, $paymentId);
-            throw new JsonException(401, 'Approval URL.', $e->getResponse());
+            throw new JsonException(401, 'Approval URL', $e->getResponse());
         }
     }
 

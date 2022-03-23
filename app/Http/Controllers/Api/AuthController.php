@@ -26,12 +26,13 @@ class AuthController extends Controller
     {
         $user = $this->getUser($request);
 
+
         if (!$user) {
-            throw new JsonException(404, 'No user found.');
+            throw new JsonException(401);
         }
 
         $this->updateUser($request, $user);
-        return $this->responseJson($user);
+        return $this->responseJson($user, $this->status);
     }
 
     // HELPER METHODS
@@ -47,9 +48,6 @@ class AuthController extends Controller
             ->where('client_secret', $request->client_secret)
             ->first();
 
-        if (!$user) {
-            return null;
-        }
         return $user;
     }
 

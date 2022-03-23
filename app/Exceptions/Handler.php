@@ -58,6 +58,7 @@ class Handler extends ExceptionHandler
                     throw new JsonException(400, 'See /help for more info.');
                 }
 
+                // unknown
                 throw new JsonException(500);
             }
         });

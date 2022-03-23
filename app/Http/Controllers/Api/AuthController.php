@@ -6,10 +6,7 @@ use App\Exceptions\Api\JsonException;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use App\Support\Facades\Neonomics;
-use Exception;
-use Facade\FlareClient\Http\Exceptions\NotFound;
 use Illuminate\Http\Request;
-use Throwable;
 
 class AuthController extends Controller
 {

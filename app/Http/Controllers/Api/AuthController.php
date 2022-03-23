@@ -6,7 +6,10 @@ use App\Exceptions\Api\JsonException;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use App\Support\Facades\Neonomics;
+use Exception;
+use Facade\FlareClient\Http\Exceptions\NotFound;
 use Illuminate\Http\Request;
+use Throwable;
 
 class AuthController extends Controller
 {
@@ -47,6 +50,9 @@ class AuthController extends Controller
             ->where('client_secret', $request->client_secret)
             ->first();
 
+        if (!$user) {
+            return null;
+        }
         return $user;
     }
 
@@ -62,6 +68,7 @@ class AuthController extends Controller
         ]);
 
         $tokens = Neonomics::getTokens($request->client_id, $request->client_secret);
+
         $user = User::create([
             'name' => $request->name,
             'client_id' => $request->client_id,

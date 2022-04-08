@@ -12,7 +12,7 @@ class Payment extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'user_id',
         'session_id',
         'payment_id',
     ];
@@ -23,6 +23,7 @@ class Payment extends Model
      * @var array<int, string>
      */
     protected $hidden = [
+        'user_id',
         'session_id',
         'payment_id',
     ];

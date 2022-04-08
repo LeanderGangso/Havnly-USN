@@ -75,7 +75,7 @@ class HelpController extends Controller
                     'method' => 'GET',
                     'headers' => [
                         'authorization' => 'Bearer <token>',
-                        'x-user-id' => 'Your applications user ID.',
+                        'x-device-id' => 'Your applications user ID.',
                         'x-bank-id' => 'One of the provided bank ID\'s.',
                         'x-identification-id' => 'A users social security number. (Required if bank has requireIdentification=true)'
                     ],
@@ -86,7 +86,7 @@ class HelpController extends Controller
                     'method' => 'GET',
                     'headers' => [
                         'authorization' => 'Bearer <token>',
-                        'x-user-id' => 'Your applications user ID.',
+                        'x-device-id' => 'Your applications user ID.',
                         'x-bank-id' => 'One of the provided bank ID\'s.',
                         'x-identification-id' => 'A users social security number. (Required if bank has requireIdentification=true)'
                     ],
@@ -97,7 +97,7 @@ class HelpController extends Controller
                     'method' => 'GET',
                     'headers' => [
                         'authorization' => 'Bearer <token>',
-                        'x-user-id' => 'Your applications user ID.',
+                        'x-device-id' => 'Your applications user ID.',
                         'x-bank-id' => 'One of the provided bank ID\'s.',
                         'x-identification-id' => 'A users social security number. (Required if bank has requireIdentification=true)'
                     ],
@@ -108,7 +108,7 @@ class HelpController extends Controller
                     'method' => 'GET',
                     'headers' => [
                         'authorization' => 'Bearer <token>',
-                        'x-user-id' => 'Your applications user ID.',
+                        'x-device-id' => 'Your applications user ID.',
                         'x-bank-id' => 'One of the provided bank ID\'s.',
                         'x-identification-id' => 'A users social security number. (Required if bank has requireIdentification=true)'
                     ],
@@ -121,7 +121,7 @@ class HelpController extends Controller
                     'method' => 'POST',
                     'headers' => [
                         'authorization' => 'Bearer <token>',
-                        'x-user-id' => 'Your applications user ID.',
+                        'x-device-id' => 'Your applications user ID.',
                         'x-bank-id' => 'One of the provided bank ID\'s.',
                         'x-identification-id' => 'A users social security number. (Required if bank has requireIdentification=true)'
                     ],

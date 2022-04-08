@@ -91,7 +91,7 @@ class ApiHelper
             return $this->runLastFailedRequest($token);
         }
         // others
-        throw new JsonException(400, $body->message);
+        throw new JsonException(400, "Error-$body->errorCode from Neonomics. $body->message");
     }
 
     private function neonomicsErrors($e)

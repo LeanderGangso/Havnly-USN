@@ -16,25 +16,25 @@ class ResourceController extends Controller
 
         if ($payment) {
             $session = $this->getOrFailSession($payment->session_id);
-            Neonomics::completePayment($id, $session->user_id, $session->session_id);
-            $userId = $session->user_id;
+            Neonomics::completePayment($id, $session->device_id, $session->session_id);
+            $deviceId = $session->device_id;
             $action = 'Payment authorized';
             $payment->delete();
         } else {
             $session = $this->getOrFailSession($id);
-            $userId = $session->user_id;
+            $deviceId = $session->device_id;
             $action = 'Consent approved';
         }
 
         return $this->responseJson([
-            'user_id' => $userId,
+            'device_id' => $deviceId,
             'action' => $action,
         ]);
     }
 
     private function getOrFailSession(string $id)
     {
-        $session = Session::where('name', auth()->user()->name)
+        $session = Session::where('user_id', auth()->user()->id)
             ->where('session_id', $id)
             ->first();
         if (!$session) {
@@ -45,7 +45,7 @@ class ResourceController extends Controller
 
     private function getPayment(string $id)
     {
-        return Payment::where('name', auth()->user()->name)
+        return Payment::where('user_id', auth()->user()->id)
             ->where('payment_id', $id)
             ->first();
     }

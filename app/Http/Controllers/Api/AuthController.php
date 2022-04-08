@@ -26,7 +26,6 @@ class AuthController extends Controller
     {
         $user = $this->getUser($request);
 
-
         if (!$user) {
             throw new JsonException(401);
         }
@@ -55,7 +54,7 @@ class AuthController extends Controller
     {
         $this->status = 201;
         $request->validate([
-            'name' => ['required', 'string', 'unique:users,name'],
+            'name' => ['required', 'string'],
             'client_id' => ['required', 'string', 'unique:users,client_id'],
             'client_secret' => ['required', 'string'],
             'encryption_key' => ['required', 'string'],
@@ -80,7 +79,7 @@ class AuthController extends Controller
     private function updateUser(Request $request, User $user)
     {
         $request->validate([
-            'name' => ['required', 'string', 'unique:users,name'],
+            'name' => ['required', 'string'],
             'client_id' => ['required', 'string'],
             'client_secret' => ['required', 'string'],
             'encryption_key' => ['required', 'string'],

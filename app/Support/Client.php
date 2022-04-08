@@ -105,28 +105,28 @@ class Client
     // Session //
     //---------//
 
-    private function getOrCreateSession(string $userId, string $bankId)
+    private function getOrCreateSession(string $deviceId, string $bankId)
     {
-        $session = Session::where('name', $this->user->name)
-            ->where('user_id', $userId)
+        $session = Session::where('user_id', $this->user->id)
+            ->where('device_id', $deviceId)
             ->where('bank_id', $bankId)
             ->first();
         if (!$session) {
-            $session = $this->createSession($userId, $bankId);
+            $session = $this->createSession($deviceId, $bankId);
         }
         return $session;
     }
 
-    private function createSession(string $userId, string $bankId)
+    private function createSession(string $deviceId, string $bankId)
     {
         $data = [
-            'headers' => ['x-device-id' => $userId],
+            'headers' => ['x-device-id' => $deviceId],
             'json' => ['bankId' => $bankId]
         ];
         $res = $this->apiHelper->request($this->user->access_token, 'POST', 'session', $data);
         $session = Session::create([
-            'name' => $this->user->name,
-            'user_id' => $userId,
+            'user_id' => $this->user->id,
+            'device_id' => $deviceId,
             'bank_id' => $bankId,
             'session_id' => $res->sessionId,
         ]);
@@ -137,43 +137,43 @@ class Client
     // Account //
     //---------//
 
-    public function getAccounts(string $userId, string $bankId, string $personalNumber)
+    public function getAccounts(string $deviceId, string $bankId, string $personalNumber)
     {
         $url = 'accounts';
-        $res = $this->baseAccountRequest($url, $userId, $bankId, $personalNumber);
+        $res = $this->baseAccountRequest($url, $deviceId, $bankId, $personalNumber);
         return Account::jsonDeserialize($res);
     }
 
-    public function getAccountByID(string $id, string $userId, string $bankId, string $personalNumber)
+    public function getAccountByID(string $id, string $deviceId, string $bankId, string $personalNumber)
     {
         $url = "accounts/{$id}";
-        $res = $this->baseAccountRequest($url, $userId, $bankId, $personalNumber);
+        $res = $this->baseAccountRequest($url, $deviceId, $bankId, $personalNumber);
         return Account::jsonDeserialize($res);
     }
 
-    public function getAccountBalancesByID(string $id, string $userId, string $bankId, string $personalNumber)
+    public function getAccountBalancesByID(string $id, string $deviceId, string $bankId, string $personalNumber)
     {
         $url = "accounts/{$id}/balances";
-        return $this->baseAccountRequest($url, $userId, $bankId, $personalNumber);
+        return $this->baseAccountRequest($url, $deviceId, $bankId, $personalNumber);
     }
 
-    public function getAccountTransactionsByID(string $id, string $userId, string $bankId, string $personalNumber)
+    public function getAccountTransactionsByID(string $id, string $deviceId, string $bankId, string $personalNumber)
     {
         $url = "accounts/{$id}/transactions";
-        return $this->baseAccountRequest($url, $userId, $bankId, $personalNumber);
+        return $this->baseAccountRequest($url, $deviceId, $bankId, $personalNumber);
     }
 
-    private function baseAccountRequest(string $url, string $userId, string $bankId, string $personalNumber)
+    private function baseAccountRequest(string $url, string $deviceId, string $bankId, string $personalNumber)
     {
-        $data = $this->getAccountRequestData($userId, $bankId, $personalNumber);
+        $data = $this->getAccountRequestData($deviceId, $bankId, $personalNumber);
         return $this->apiHelper->request($this->user->access_token, 'GET', $url, $data);
     }
 
-    private function getAccountRequestData(string $userId, string $bankId, string $personalNumber)
+    private function getAccountRequestData(string $deviceId, string $bankId, string $personalNumber)
     {
-        $session = $this->getOrCreateSession($userId, $bankId);
+        $session = $this->getOrCreateSession($deviceId, $bankId);
         $data['headers'] = [
-            'x-device-id' => $userId,
+            'x-device-id' => $deviceId,
             'x-session-id' => $session->session_id,
             'x-psu-ip-address' => request()->ip(),
             'x-psu-id' => $this->encryptIdentifier($this->user->encryption_key, $personalNumber),
@@ -185,14 +185,14 @@ class Client
     // Payment //
     //---------//
 
-    public function newPayment(string $userId, string $bankId, string $personalNumber, object $json)
+    public function newPayment(string $deviceId, string $bankId, string $personalNumber, object $json)
     {
         $url = 'payments/domestic-transfer';
-        $data = $this->getPaymentRequestData($userId, $bankId, $personalNumber, $json);
+        $data = $this->getPaymentRequestData($deviceId, $bankId, $personalNumber, $json);
         try {
             $this->apiHelper->request($this->user->access_token, 'POST', $url, $data);
             return [
-                'user_id' => $userId,
+                'device_id' => $deviceId,
                 'action' => 'Payment authorized.',
             ];
         } catch (PaymentException $e) {
@@ -203,12 +203,12 @@ class Client
         }
     }
 
-    public function completePayment(string $id, string $userId, string $sessionId)
+    public function completePayment(string $id, string $deviceId, string $sessionId)
     {
         $url = "payments/domestic-transfer/{$id}/complete";
         $data = [
             'headers' => [
-                'x-device-id' => $userId,
+                'x-device-id' => $deviceId,
                 'x-session-id' => $sessionId,
                 'x-psu-ip-address' => request()->ip(),
             ],
@@ -218,12 +218,12 @@ class Client
         return true;
     }
 
-    private function getPaymentRequestData(string $userId, string $bankId, string $personalNumber, object $json)
+    private function getPaymentRequestData(string $deviceId, string $bankId, string $personalNumber, object $json)
     {
-        $session = $this->getOrCreateSession($userId, $bankId);
+        $session = $this->getOrCreateSession($deviceId, $bankId);
         $data = [
             'headers' => [
-                'x-device-id' => $userId,
+                'x-device-id' => $deviceId,
                 'x-session-id' => $session->session_id,
                 'x-redirect-url' => $this->user->redirect_url,
                 'x-psu-ip-address' => request()->ip(),
@@ -247,7 +247,7 @@ class Client
     private function createPayment(string $sessionId, string $paymentId)
     {
         $payment = Payment::create([
-            'name' => $this->user->name,
+            'user_id' => $this->user->id,
             'session_id' => $sessionId,
             'payment_id' => $paymentId,
         ]);

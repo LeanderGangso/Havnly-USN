@@ -36,7 +36,8 @@ class JsonException extends Exception
         return response()->json($json, $this->statusCode);
     }
 
-    private function getStatusDescription(int $code) {
+    private function getStatusDescription(int $code)
+    {
         $httpStatuses = [
             200 => 'OK',
             201 => 'Created',

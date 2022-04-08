@@ -9,20 +9,20 @@ use Illuminate\Http\Request;
 
 class PaymentController extends Controller
 {
-    private $userId;
+    private $deviceId;
     private $bankId;
     private $personalNumber;
     private $body;
 
     public function __construct(Request $request)
     {
-        $this->userId = $request->header('x-user-id');
+        $this->deviceId = $request->header('x-device-id');
         $this->bankId = $request->header('x-bank-id', '');
         $this->personalNumber = $request->header('x-identification-id', '');
         $this->body = json_decode($request->getContent());
 
-        if (!$this->userId) {
-            throw new JsonException(400, 'x-user-id is required.');
+        if (!$this->deviceId) {
+            throw new JsonException(400, 'x-device-id is required.');
         }
     }
 
@@ -42,7 +42,7 @@ class PaymentController extends Controller
             'identification' => ['required', 'string'],
             'note' => ['string'],
         ]);
-        $payment = Neonomics::newPayment($this->userId, $this->bankId, $this->personalNumber, $this->body);
+        $payment = Neonomics::newPayment($this->deviceId, $this->bankId, $this->personalNumber, $this->body);
         return $this->responseJson($payment);
     }
 }

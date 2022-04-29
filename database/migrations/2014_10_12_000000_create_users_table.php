@@ -20,8 +20,8 @@ class CreateUsersTable extends Migration
             $table->string('client_secret');
             $table->string('encryption_key');
             $table->string('redirect_url');
-            $table->string('access_token');
-            $table->string('refresh_token');
+            $table->string('access_token', 2048);
+            $table->string('refresh_token', 2048);
             $table->timestamps();
         });
     }
